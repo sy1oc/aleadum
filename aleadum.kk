@@ -1,8 +1,6 @@
-import std/num/int64
 import std/num/ddouble
 import std/time
 import std/os/env
-import std/time
 import hash
 
 fun main()
