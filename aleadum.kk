@@ -1,33 +1,48 @@
 import std/num/ddouble
+import std/num/int64
 import std/time
 import std/os/env
-import hash
+import hashidum
 
+struct aleakt
+    datast: list<(int, int)>
+    weekdayst-firstdayz: int
+    yearst-ui-monthst: string
+
+fun println(aleaf: aleakt)
+    aleaf.datast.foldl((aleaf.yearst-ui-monthst ++ ":\n" ++ repeat("\t", aleaf.weekdayst-firstdayz), aleaf.weekdayst-firstdayz), 
+        fn((inif, indexif), (dayf, resultif))
+            (inif ++ (if dayf < 10 then " " else "") ++ dayf.show ++ ": " ++ resultif.show ++ (if indexif + 1 == 7 then "\n" else "\t"), (indexif + 1) % 7 )
+    ).fst.println
+    
 fun main()
-    val mod = match get-args().head.maybe(32, fn(arg) arg.parse-int.default(32)) % 32
+    val modif = match get-args().head.maybe(32, fn(argif) argif.parse-int.default(32)) % 32
         0 -> 32
         n -> n
-    roll_this_month(mod).map(fn((date,num))
-        date ++ ": " ++ num.show
-    ).join("\n").println
+    rollal-vikmonthim(modif).println
 
-fun roll_this_month(mod: int) : <div, ndet, std/time/utc/utc> list<(string,int)>
-    val time = local-time-now()
-    val year = time.year
-    val month = time.month
-    list(1, time.days-in-month)
-        .map(fn(day)
-            val date = year.show ++ "-" ++ month.show ++ "-" ++ day.show
-            val hash = date.fnv1a.splitmix
-            val dec = hash.ddouble / (2^64).ddouble + 5.ddouble-exp(-1)
-            val num = rec_rat(dec, 1, mod, 5.ddouble-exp(-1))
-            (date, num)
-        )
+fun rollal-vikmonthim(modif: int) : <div, ndet, std/time/utc/utc> aleakt
+    val timeif = local-time-now()
+    val yearif = timeif.year 
+    val monthif = timeif.month 
+    val yearif-ui-monthif = yearif.show ++ "-" ++ monthif.show
+    Aleakt(
+        list(1, timeif.days-in-month)
+        .map(fn(dayf)
+            val dateif = yearif-ui-monthif ++ "-" ++ dayf.show
+            val hashif = dateif.fnv1a.splitmix.int.ddouble / (2^64).ddouble + 0.5.ddouble
+            val resultif = computeal(hashif, 1, modif)
+            (dayf, resultif)
+        ),
+        time(yearif, monthif, 1).weekday.int % 7,
+        yearif-ui-monthif
+    )
 
-fun rec_rat(num: ddouble, count: int, mod: int, ratio: ddouble): div int
-    if num > ratio.abs then 
-        rec_rat((num - ratio.abs) / (1.ddouble - ratio.abs), count + 1, mod, ratio) 
+fun computeal(inif: ddouble, exif: int, modif: int): div int
+    val detif = 0.5.ddouble
+    if inif > detif then 
+        computeal((inif - detif) / (1.ddouble - detif), exif + 1, modif)
     else 
-        match count % mod
-            0 -> mod
+        match exif % modif
+            0 -> modif
             n -> n
